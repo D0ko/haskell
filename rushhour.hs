@@ -179,7 +179,7 @@ isTruck :: Vehicle -> Bool
 isTruck (Vehicle (x,y))  = y-x == 2 || y-x == 14
 
 allCells :: [Cell]
-allCells = filter (\x -> x /= 7 && x/= 14 && x /= 21 && x/= 28 && x/= 35) [1..41]
+allCells = filter validCellPath [1..41]
 
 fillCells :: Vehicle -> [Cell]
 fillCells (Vehicle (x,y))
