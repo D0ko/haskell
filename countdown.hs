@@ -78,15 +78,14 @@ mkAExprs1 [x] = [VAExpr (Num x, x)]
 mkAExprs1 xs = concatMap combineExprs (unmerges1 xs)
     where combineExprs (xs', xs'') = [va | va1 <- mkAExprs1 xs', va2 <- mkAExprs1 xs'', va <- combineVAExprs1 va1 va2]
 
--- marche pas, celui d'en dessous marche, mais pas efficace
 searchBest :: Value -> [VAExpr] -> VAExpr
 searchBest x (e:es) = go e es
-    where
-        go e* [] = e*
-        go e* (e:es)
-            | e* == 0 = e*
-            | e* > e = go e es
-            | otherwise = go e* es
+  where
+    go best [] = best
+    go best@(VAExpr (_, v1)) (e@(VAExpr (_, v2)) : es)
+      | abs (x - v1) == 0 = best
+      | abs (x - v2) < abs (x - v1) = go e es
+      | otherwise = go best es
 {- searchBest target exprs = L.minimumBy (comparing diff) exprs
     where
         diff (VAExpr (_, v)) = abs (target - v)
